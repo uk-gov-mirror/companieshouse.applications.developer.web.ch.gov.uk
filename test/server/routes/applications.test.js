@@ -26,6 +26,7 @@ const signedInCookie = [`${process.env.COOKIE_NAME}=${SIGNED_IN_COOKIE}`];
 process.env.DEFAULT_SESSION_EXPIRATION = 3600;
 
 describe('routes/applications.js', () => {
+
   beforeEach(done => {
     sinon.reset();
     sinon.restore();
@@ -391,7 +392,7 @@ describe('routes/applications.js', () => {
       .set('Cookie', signedInCookie)
       .send({ _csrf: CSRF_TOKEN })
       .then(response => {
-        expect(stubLogger).to.have.callCount(7);
+        expect(stubLogger).to.have.callCount(8);
         expect(stubDeleteKey).to.have.been.calledOnce;
         expect(stubDeleteKey).to.have.been.calledWith('mockAppId', 'mockKeyId', 'mockKeyType', 'oKi1z8KY0gXsXu__hy2-YU_JJSdtxOkJ4K5MAE-gOFVzpKt5lvqnFpVeUjhqhVHZ1K8Hkr7M4IYdzJUnOz2hQw', 'mockEnv');
         expect(response).to.redirectTo(/manage-applications\/mockAppId\/view\/mockEnv/g);
@@ -420,6 +421,7 @@ describe('routes/applications.js', () => {
         expect(response).to.have.status(200);
       });
   });
+
   it('should delete an application on the test environment and redirect to the application overview page on the /manage-applications mount path', () => {
     const slug = '/manage-applications/abc123/type123/key123/delete/test';
     process.env.FUTURE_DISPLAY_FLAG = 'true';
@@ -439,6 +441,7 @@ describe('routes/applications.js', () => {
         expect(stubNotifications).to.have.been.calledOnce;
       });
   });
+
   it('should serve up the add new key page', () => {
     const slug = '/manage-applications/mockAppId/api-key/add/mockEnv';
     return request(app)
@@ -450,6 +453,7 @@ describe('routes/applications.js', () => {
         expect(response).to.have.status(200);
       });
   });
+
   it('should save a rest key and redirect to the view application page on the /manage-applications mount path', () => {
     const slug = '/manage-applications/mockAppId/api-key/add/mockEnv';
     const stubAddKeyValidator = sinon.stub(Validator.prototype, 'addNewKey').returns(Promise.resolve(true));
@@ -462,7 +466,7 @@ describe('routes/applications.js', () => {
       .set('Cookie', signedInCookie)
       .send(routeData.addNewRestKey)
       .then(response => {
-        expect(stubLogger).to.have.callCount(4);
+        expect(stubLogger).to.have.callCount(5);
         expect(stubAddKeyValidator).to.have.been.calledOnce;
         expect(stubAddKeyValidator).to.have.been.calledWith(Object.assign(routeData.addNewRestKey, {
           appId: 'mockAppId',
@@ -475,6 +479,7 @@ describe('routes/applications.js', () => {
         expect(stubNotifications).to.have.been.calledOnce;
       });
   });
+
   it('should serve add new (rest) key with an error on validation', () => {
     const slug = '/manage-applications/mockAppId/api-key/add/mockEnv';
     const validationException = exceptions.validationException;
@@ -501,6 +506,7 @@ describe('routes/applications.js', () => {
         expect(stubGetList).to.not.have.been.called;
       });
   });
+
   it('should save a web key and redirect to the view application page on the /manage-applications mount path', () => {
     const slug = '/manage-applications/mockAppId/api-key/add/mockEnv';
     const stubAddKeyValidator = sinon.stub(Validator.prototype, 'addNewKey').returns(Promise.resolve(true));
@@ -525,6 +531,7 @@ describe('routes/applications.js', () => {
         expect(stubNotifications).to.have.been.calledOnce;
       });
   });
+
   it('should serve add new (web) key with an error on validation', () => {
     const slug = '/manage-applications/mockAppId/api-key/add/mockEnv';
     const validationException = exceptions.validationException;
@@ -551,6 +558,7 @@ describe('routes/applications.js', () => {
         expect(stubGetList).to.not.have.been.called;
       });
   });
+
   it('should save a stream key and redirect to the view application page on the /manage-applications mount path', () => {
     const slug = '/manage-applications/mockAppId/api-key/add/mockEnv';
     const stubAddKeyValidator = sinon.stub(Validator.prototype, 'addNewKey').returns(Promise.resolve(true));
@@ -563,7 +571,7 @@ describe('routes/applications.js', () => {
       .set('Cookie', signedInCookie)
       .send(routeData.addNewStreamKey)
       .then(response => {
-        expect(stubLogger).to.have.callCount(4);
+        expect(stubLogger).to.have.callCount(5);
         expect(stubAddKeyValidator).to.have.been.calledOnce;
         expect(stubAddKeyValidator).to.have.been.calledWith(Object.assign(routeData.addNewStreamKey, {
           appId: 'mockAppId',
@@ -576,6 +584,7 @@ describe('routes/applications.js', () => {
         expect(stubNotifications).to.have.been.calledOnce;
       });
   });
+
   it('should serve add new (stream) key with an error on validation', () => {
     const slug = '/manage-applications/mockAppId/api-key/add/mockEnv';
     const validationException = exceptions.validationException;
